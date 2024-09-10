@@ -5,7 +5,10 @@ import (
 	"reflect"
 )
 
-var offset uintptr
+var (
+	offset uintptr
+	kind   reflect.Kind
+)
 
 func init() {
 	typ := inspect.TypeOf("runtime.g")
@@ -14,12 +17,16 @@ func init() {
 	}
 	for i := 0; i < typ.NumField(); i++ {
 		f := typ.Field(i)
-		if f.Name == "goid" && f.Type == reflect.TypeOf(int64(0)) {
+		if f.Name == "goid" {
+			kind = f.Type.Kind()
 			offset = f.Offset
 			break
 		}
 	}
 	if offset == 0 {
 		panic("runtime.g.goid not found")
+	}
+	if kind != reflect.Int64 && kind != reflect.Uint64 {
+		panic("runtime.g.goid is not int64 or uint64, got: " + kind.String())
 	}
 }

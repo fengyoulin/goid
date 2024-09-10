@@ -9,7 +9,7 @@ import (
 func TestID(t *testing.T) {
 	limit := 50
 	ids := make([]int, limit)
-	ch := make(chan int64, limit)
+	ch := make(chan uint64, limit)
 	wg := sync.WaitGroup{}
 	wg.Add(limit)
 	for limit > 0 {
